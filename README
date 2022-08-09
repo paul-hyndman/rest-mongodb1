@@ -1,0 +1,65 @@
+A simple project showing a way to put a REST API on top of Mongodb persistence.  
+The project models create/read of  life insurance policy data.
+
+Required software:
+ - Mongosh
+ - Mongodb (see Mongo for downloads.  For simplicity just unzip installs and modify PATH when using Windows)
+ - Postman or CURL for testing
+ - Java 8+
+ - Maven
+
+1. Using Mongosh, create base collection for policies
+db.createCollection("policies")
+
+2. Using Mongosh, insert one row to define fields
+db.policies.insertOne(
+ {
+  "policyNumber": "pol001",
+  "faceAmount" : 100000,
+  "insured" : "joe insured",
+  "age" : 34,
+  "streetAddress" : "2121 Young Street",
+  "city" : "Dallas",
+  "state" : "Texas",
+  "zipCode" : "75201-1001"
+  }
+ )
+
+3. Using Mongosh, create unique index on natural key
+db.policies.createIndex( { "policyNumber": 1 }, { unique: true } )
+
+A Sample query from Mongosh:
+test> db.policies.find( {} )
+[
+  {
+    _id: ObjectId("62f15daee67510dc56f7d585"),
+    policyNumber: 'pol001',
+    faceAmount: 100000,
+    insured: 'joe insured',
+    age: 34,
+    streetAddress: '2121 Young Street',
+    city: 'Dallas',
+    state: 'Texas',
+    zipCode: '75201-1001'
+  }
+]
+
+Project notes:
+To build:	mvn package
+To run:		java -jar rest-mongodb1-0.0.1-SNAPSHOT.jar com.example.RestServiceApplication
+
+URL:  http://localhost:8080/policy
+Post example payload:
+{ 
+     "policyNumber": "pol002", 
+     "faceAmount": 100000, 
+     "insured": "jane insured", 
+     "age": 24, 
+     "streetAddress": "2121 Young Street", 
+     "city": "Dallas", 
+     "state": "Texas", 
+     "zipCode": "75201-1001" 
+}
+
+Get query example:
+http://localhost:8080/policy/pol001
